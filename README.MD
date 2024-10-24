@@ -44,5 +44,8 @@ XCoder目前已经过多个内测版本的迭代和用户反馈的持续优化�
 * 进入项目根目录，执行 `go mod tidy`
 * 进入项目根目录，执行 `go run main.go`
 
+#### 插件安装部署
+插件安装部署，请参考项目[XCoder-Intellij](https://github.com/FinVolution/XCoder-Intellij)。
+
 ## 更多配置及部署
 更多项目的配置及部署信息，请参考[开发文档](./docs/development.md)
