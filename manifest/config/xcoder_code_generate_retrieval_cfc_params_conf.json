@@ -1,0 +1,10 @@
+{
+  "config": {
+    "flowPercent": 20,
+    "maxCrossFileNums": 8,
+    "chunkSize": 10,
+    "slideWindowSize": 1,
+    "minScore": 0.05,
+    "supportCodeLangs": ["go", "java", "python", "javascript", "typescript", "groovy", "kotlin"]
+  }
+}

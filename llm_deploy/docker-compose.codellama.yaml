@@ -1,0 +1,28 @@
+version: "3.9"
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.4.1/24
+
+services:
+  codellama-13b-hf-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - <YOUR CODELLAMA MODEL PATH>:/root/.cache/huggingface
+    image: vllm/vllm-openai:v0.5.0
+    shm_size: "8g"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              device_ids: ["0"]
+              capabilities: ["gpu"]
+    ports:
+      - "9000:9000"
+    entrypoint: ["python3", "-m", "vllm.entrypoints.openai.api_server", "--dtype", "bfloat16", "--max-model-len", "7000", "--tokenizer-mode", "auto", "--max-num-batched-tokens", '30000', "--block-size", "16", "--swap-space", "16", "--served-model-name", 'codellama-13b-hf', "--model", "/root/.cache/huggingface/CodeLlama-13b-hf", "--host", "0.0.0.0", "--port", "9000"]

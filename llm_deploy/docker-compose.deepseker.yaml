@@ -1,0 +1,28 @@
+version: "3.9"
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.5.1/24
+
+services:
+  deepseek-coder-7b-base-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - <YOUR DEEPSEEK MODEL PATH>:/root/.cache/huggingface
+    image: vllm/vllm-openai:v0.5.0
+    shm_size: "8g"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              device_ids: ["1"]
+              capabilities: ["gpu"]
+    ports:
+      - "13000:13000"
+    entrypoint: ["python3", "-m", "vllm.entrypoints.openai.api_server", "--dtype", "bfloat16", "--max-model-len", "7000", "--tokenizer-mode", "auto", "--max-num-batched-tokens", '30000', "--block-size", "16", "--swap-space", "16", "--served-model-name", 'deepseek-coder-7b-base', "--model", "/root/.cache/huggingface/Deepseek-coder-6.7b-base", "--host", "0.0.0.0", "--port", "13000"]

@@ -1,0 +1,21 @@
+
+# CLI tool, only in development environment.
+# https://goframe.org/pages/viewpage.action?pageId=3673173
+gfcli:
+  docker:
+    build: "-a amd64 -s linux -p temp -ew"
+    tagPrefixes:
+      - xcoder/xcoder:latest
+
+  gen:
+    dao:
+      - link: "mysql:xcoder_user:xcoder_password@tcp(xcoder_mysql:3306)/xcoder_db?charset=utf8&parseTime=True&loc=Local" # mysql 数据库连接地址
+        group: "default"                              # 分组 使用代码生成功能需要填的参数
+        tables: ""                                    # 指定当前数据库中需要自动生成的数据表。如果为空，表示数据库的所有表都会自动生成。
+        tablesEx: ""                                  # 指定当前数据库中需要排除自动生成的数据表。
+        removePrefix: "p_"
+        descriptionTag: true
+        noModelComment: true
+        jsonCase: "CamelLower"
+        gJsonSupport: true
+        clear: false

@@ -1,0 +1,74 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: xcoder_mongodb
+    privileged: true
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo/db:/data/db
+      - ./data/mongo/log:/var/log/mongodb
+      - ../initdb.d/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: xcoder_mongo_user
+      MONGO_INITDB_ROOT_PASSWORD: xcoder_mongo_pwd
+      MONGO_INITDB_DATABASE: xcoder_mongo_db
+    networks:
+      - xcoder_network
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.stats()" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8.0
+    container_name: xcoder_mysql
+    privileged: true
+    environment:
+      MYSQL_ROOT_PASSWORD: xcoder_root_password
+      MYSQL_DATABASE: xcoder_mysql_db
+      MYSQL_USER: xcoder_mysql_user
+      MYSQL_PASSWORD: xcoder_mysql_pwd
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql/data:/var/lib/mysql
+      - ./data/mysql/conf:/etc/mysql/conf.d
+      - ./data/mysql/log:/var/log/mysql
+      - ../initdb.d/init_mysql.sql:/docker-entrypoint-initdb.d/init_mysql.sql:ro
+    networks:
+      - xcoder_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  xcoder:
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+    image: xcoderai/xcoder:v0.1.0
+    container_name: xcoder_standalone
+    privileged: true
+    environment:
+      CFG_BASE_DIR: /app/config
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../../config:/app/config:ro
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    networks:
+      - xcoder_network
+
+
+networks:
+  xcoder_network:

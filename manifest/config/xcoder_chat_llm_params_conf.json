@@ -1,0 +1,16 @@
+{
+  "config": {
+    "llmType": "",
+    "llmParams": {
+      "apiBase": "",
+      "apiKey": "",
+      "apiVersion": "",
+      "model": "",
+      "temperature": 0.1,
+      "maxTokens": 2500,
+      "topP": 1,
+      "frequencyPenalty": 0,
+      "presencePenalty": 0
+    }
+  }
+}

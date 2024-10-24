@@ -1,0 +1,26 @@
+server:
+  address:     ":8081"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level : "all"
+  stdout: true
+
+database:
+  default:
+    link: "mysql:xcoder_mysql_user:xcoder_mysql_pwd@tcp(xcoder_mysql:3306)/xcoder_mysql_db?charset=utf8&parseTime=True&loc=Local"
+    debug: true
+  logger:
+    path: "./log/sql"
+    level: "all"
+    stdout: true
+
+mongodb:
+  default:
+    hosts: "xcoder_mongodb:27017"
+    dbname: "xcoder_mongo_db"
+    username: "xcoder_mongo_user"
+    password: "xcoder_mongo_pwd"
+    authsource: "admin"
+    replicaSet: ""

@@ -1,0 +1,128 @@
+// Copyright (c) Travis Cline <travis.cline@gmail.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+package openai
+
+import (
+	"xcoder/core/callbacks"
+	"xcoder/core/llms/openai/internal/openaiclient"
+)
+
+const (
+	tokenEnvVarName        = "OPENAI_API_KEY"      //nolint:gosec
+	modelEnvVarName        = "OPENAI_MODEL"        //nolint:gosec
+	baseURLEnvVarName      = "OPENAI_BASE_URL"     //nolint:gosec
+	baseAPIBaseEnvVarName  = "OPENAI_API_BASE"     //nolint:gosec
+	organizationEnvVarName = "OPENAI_ORGANIZATION" //nolint:gosecint:gosec
+)
+
+type APIType openaiclient.APIType
+
+const (
+	APITypeOpenAI  APIType = APIType(openaiclient.APITypeOpenAI)
+	APITypeAzure           = APIType(openaiclient.APITypeAzure)
+	APITypeAzureAD         = APIType(openaiclient.APITypeAzureAD)
+)
+
+const (
+	DefaultAPIVersion = "2023-05-15"
+)
+
+type options struct {
+	token        string
+	model        string
+	baseURL      string
+	organization string
+	apiType      APIType
+	httpClient   openaiclient.Doer
+
+	// required when APIType is APITypeAzure or APITypeAzureAD
+	apiVersion     string
+	embeddingModel string
+
+	callbackHandler callbacks.Handler
+}
+
+type Option func(*options)
+
+// WithToken passes the OpenAI API token to the client. If not set, the token
+// is read from the OPENAI_API_KEY environment variable.
+func WithToken(token string) Option {
+	return func(opts *options) {
+		opts.token = token
+	}
+}
+
+// WithModel passes the OpenAI model to the client. If not set, the model
+// is read from the OPENAI_MODEL environment variable.
+// Required when ApiType is Azure.
+func WithModel(model string) Option {
+	return func(opts *options) {
+		opts.model = model
+	}
+}
+
+// WithEmbeddingModel passes the OpenAI model to the client. Required when ApiType is Azure.
+func WithEmbeddingModel(embeddingModel string) Option {
+	return func(opts *options) {
+		opts.embeddingModel = embeddingModel
+	}
+}
+
+// WithBaseURL passes the OpenAI base url to the client. If not set, the base url
+// is read from the OPENAI_BASE_URL environment variable. If still not set in ENV
+// VAR OPENAI_BASE_URL, then the default value is https://api.openai.com/v1 is used.
+func WithBaseURL(baseURL string) Option {
+	return func(opts *options) {
+		opts.baseURL = baseURL
+	}
+}
+
+// WithOrganization passes the OpenAI organization to the client. If not set, the
+// organization is read from the OPENAI_ORGANIZATION.
+func WithOrganization(organization string) Option {
+	return func(opts *options) {
+		opts.organization = organization
+	}
+}
+
+// WithAPIType passes the api type to the client. If not set, the default value
+// is APITypeOpenAI.
+func WithAPIType(apiType APIType) Option {
+	return func(opts *options) {
+		opts.apiType = apiType
+	}
+}
+
+// WithAPIVersion passes the api version to the client. If not set, the default value
+// is DefaultAPIVersion.
+func WithAPIVersion(apiVersion string) Option {
+	return func(opts *options) {
+		opts.apiVersion = apiVersion
+	}
+}
+
+// WithHTTPClient allows setting a custom HTTP client. If not set, the default value
+// is http.DefaultClient.
+func WithHTTPClient(client openaiclient.Doer) Option {
+	return func(opts *options) {
+		opts.httpClient = client
+	}
+}

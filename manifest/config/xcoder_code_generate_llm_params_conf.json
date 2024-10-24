@@ -1,0 +1,33 @@
+{
+  "config": {
+    "codellama": {
+      "modelName": "codellama",
+      "modelVersion": "codellama-13b-hf",
+      "totalMaxTokens": 2500,
+      "singleLineMaxTokens": 80,
+      "multiLineMaxTokens": 160,
+      "singeLineTemperature": 0.2,
+      "multiLineTemperature": 0,
+      "singleLineStopWords": ["\n", "\r\n"],
+      "multiLineStopWords": ["\n\n", "\r\n\r\n"],
+      "singleLineTopP": 1,
+      "multiLineTopP": 1,
+      "connUrls": []
+    },
+    "deepseeker": {
+      "modelName": "deepseeker",
+      "modelVersion": "deepseek-coder-7b-base",
+      "totalMaxTokens": 2500,
+      "singleLineMaxTokens": 80,
+      "multiLineMaxTokens": 160,
+      "singeLineTemperature": 0.2,
+      "multiLineTemperature": 0,
+      "singleLineStopWords": ["\n", "\r\n"],
+      "multiLineStopWords": ["\n\n", "\r\n\r\n"],
+      "singleLineTopP": 1,
+      "multiLineTopP": 1,
+      "connUrls": []
+    }
+  },
+  "selectedModel": "codellama"
+}
