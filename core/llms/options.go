@@ -53,7 +53,7 @@ type CallOptions struct {
 	// PresencePenalty is the presence penalty for sampling.
 	PresencePenalty float64 `json:"presence_penalty"`
 
-	// Function defitions to include in the request.
+	// Function definitions to include in the request.
 	Functions []FunctionDefinition `json:"functions"`
 	// FunctionCallBehavior is the behavior to use when calling functions.
 	//

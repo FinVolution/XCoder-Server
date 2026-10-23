@@ -62,7 +62,7 @@ func CallLLM(ctx context.Context, llm *openai.Chat, in *chatin.CallLLMReq) (err 
 				Content: msg.Content,
 			})
 		default:
-			return fmt.Errorf("ChatMessageType: %s is not support", msg.Role)
+			return fmt.Errorf("ChatMessageType: %s is not supported", msg.Role)
 		}
 	}
 
